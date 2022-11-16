@@ -23,20 +23,20 @@ def to_scalar(buf):
 #
 
 def prf_expand(sk, t):
-    digest = blake2b(person=b'Zcash_ExpandSeed')
+    digest = blake2b(person=b'MASP__ExpandSeed')
     digest.update(sk)
     digest.update(t)
     return digest.digest()
 
 def crh_ivk(ak, nk):
-    digest = blake2s(person=b'Zcashivk')
+    digest = blake2s(person=b'MASP_ivk')
     digest.update(ak)
     digest.update(nk)
     ivk = digest.digest()
     return leos2ip(ivk) % 2**251
 
 def diversify_hash(d):
-    return group_hash(b'Zcash_gd', d)
+    return group_hash(b'MASP__gd', d)
 
 #
 # Key components

@@ -56,7 +56,7 @@ class ExtendedBase(object):
         return diversify_hash(self._derive_d(j))
 
     def fingerprint(self):
-        digest = blake2b(person=b'ZcashSaplingFVFP', digest_size=32)
+        digest = blake2b(person=b'MASP_SaplingFVFP', digest_size=32)
         digest.update(bytes(self.ak()) + bytes(self.nk()) + self.ovk())
         return digest.digest()
 
@@ -87,7 +87,7 @@ class ExtendedSpendingKey(DerivedAkNk, DerivedIvk, ExtendedBase):
 
     @classmethod
     def master(cls, S):
-        digest = blake2b(person=b'ZcashIP32Sapling')
+        digest = blake2b(person=b'MASP_IP32Sapling')
         digest.update(S)
         I     = digest.digest()
         I_L   = I[:32]
@@ -143,7 +143,7 @@ class ExtendedSpendingKey(DerivedAkNk, DerivedIvk, ExtendedBase):
         return self.__class__(ask_i, nsk_i, ovk_i, dk_i, c_i, self.depth()+1, self.tag(), i)
 
     def internal(self):
-        digest = blake2b(person=b'Zcash_SaplingInt', digest_size=32)
+        digest = blake2b(person=b'MASP__SaplingInt', digest_size=32)
         digest.update(encode_xfvk_parts(self.ak(), self.nk(), self.ovk(), self.dk()))
         I     = digest.digest()
         I_nsk = to_scalar(prf_expand(I, b'\x17'))
@@ -226,7 +226,7 @@ class ExtendedFullViewingKey(DerivedIvk, ExtendedBase):
         return self.__class__(ak_i, nk_i, ovk_i, dk_i, c_i, self.depth()+1, self.tag(), i)
 
     def internal(self):
-        digest = blake2b(person=b'Zcash_SaplingInt', digest_size=32)
+        digest = blake2b(person=b'MASP__SaplingInt', digest_size=32)
         digest.update(encode_xfvk_parts(self.ak(), self.nk(), self.ovk(), self.dk()))
         I     = digest.digest()
         I_nsk = to_scalar(prf_expand(I, b'\x17'))
