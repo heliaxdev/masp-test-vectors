@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+from re import A
 import sys; assert sys.version_info[0] >= 3, "Python 3 required."
 
 from chacha20poly1305 import ChaCha20Poly1305
@@ -15,13 +16,13 @@ from ..output import render_args, render_tv
 
 
 def kdf_sapling(shared_secret, epk):
-    digest = blake2b(digest_size=32, person=b'Zcash_SaplingKDF')
+    digest = blake2b(digest_size=32, person=b'MASP__SaplingKDF')
     digest.update(bytes(shared_secret))
     digest.update(bytes(epk))
     return digest.digest()
 
 def prf_ock(ovk, cv, cmu, ephemeral_key):
-    digest = blake2b(digest_size=32, person=b'Zcash_Derive_ock')
+    digest = blake2b(digest_size=32, person=b'MASP__Derive_ock')
     digest.update(ovk)
     digest.update(cv)
     digest.update(cmu)
@@ -53,9 +54,10 @@ class SaplingSym(object):
 
 
 class SaplingNotePlaintext(object):
-    def __init__(self, d, v, rcm, memo):
+    def __init__(self, d, v, asset_type, rcm, memo):
         self.d = d
         self.v = v
+        self.asset_type = asset_type
         self.rcm = rcm
         self.memo = memo
 
@@ -64,6 +66,7 @@ class SaplingNotePlaintext(object):
             b'\x01' +
             self.d +
             struct.pack('<Q', self.v) +
+            self.asset_type +
             bytes(self.rcm) +
             self.memo
         )
@@ -113,9 +116,11 @@ def main():
         pk_d = sk.default_pkd()
         g_d = diversify_hash(sk.default_d())
 
+        asset_type = b'testtesttesttesttesttesttesttest'
         np = SaplingNotePlaintext(
             sk.default_d(),
             100000000 * (i+1),
+            asset_type,
             Fr(8890123457840276890326754358439057438290574382905).exp(i+1),
             b'\xf6' + b'\x00'*511)
         cv = VALUE_COMMITMENT_VALUE_BASE * Fr(np.v) + VALUE_COMMITMENT_RANDOMNESS_BASE * np.rcm
@@ -123,7 +128,8 @@ def main():
             np.rcm,
             leos2bsp(bytes(g_d)),
             leos2bsp(bytes(pk_d)),
-            np.v)
+            np.v,
+            asset_type,)
 
         (
             esk, epk,

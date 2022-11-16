@@ -44,15 +44,15 @@ def find_group_hash(D, M):
 # Sapling generators
 #
 
-SPENDING_KEY_BASE = find_group_hash(b'Zcash_G_', b'')
-PROVING_KEY_BASE = find_group_hash(b'Zcash_H_', b'')
-NOTE_POSITION_BASE = find_group_hash(b'Zcash_J_', b'')
-WINDOWED_PEDERSEN_RANDOMNESS_BASE = find_group_hash(b'Zcash_PH', b'r')
-VALUE_COMMITMENT_VALUE_BASE = find_group_hash(b'Zcash_cv', b'v')
-VALUE_COMMITMENT_RANDOMNESS_BASE = find_group_hash(b'Zcash_cv', b'r')
+SPENDING_KEY_BASE = find_group_hash(b'MASP__G_', b'')
+PROVING_KEY_BASE = find_group_hash(b'MASP__H_', b'')
+NOTE_POSITION_BASE = find_group_hash(b'MASP__J_', b'')
+WINDOWED_PEDERSEN_RANDOMNESS_BASE = find_group_hash(b'MASP__PH', b'r')
+VALUE_COMMITMENT_VALUE_BASE = find_group_hash(b'MASP__cv', b'v')
+VALUE_COMMITMENT_RANDOMNESS_BASE = find_group_hash(b'MASP__cv', b'r')
 
 required_bases = 4
-PEDERSEN_BASES = [find_group_hash(b'Zcash_PH', i2leosp(32, iminus1))
+PEDERSEN_BASES = [find_group_hash(b'MASP__PH', i2leosp(32, iminus1))
                   for iminus1 in range(0, required_bases)]
 
 def main():
